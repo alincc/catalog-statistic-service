@@ -1,0 +1,1 @@
+# catalog-statistic-service
