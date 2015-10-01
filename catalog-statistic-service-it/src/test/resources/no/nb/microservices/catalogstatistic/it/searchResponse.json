@@ -1,0 +1,64 @@
+{
+  "_links": {
+    "self": {
+      "href": "http://172.17.0.18:8765/catalog/search?q=title:\"Rana Blad\"&mediatype=avis&aggs=series"
+    }
+  },
+  "page": {
+    "size": 1,
+    "totalElements": 1,
+    "totalPages": 1,
+    "number": 0
+  },
+  "_embedded": {
+    "items": [
+      {
+        "metadata": {
+          "compositeTitle": "Rana Blad 1964.10.21",
+          "titleInfo": {
+            "title": "Rana Blad 1964.10.21"
+          },
+          "alternativeTitleInfo": {
+            "title": "Rana Blad 02.04.1947"
+          },
+          "typeOfResource": "text",
+          "mediaTypes": [
+            "Avis"
+          ],
+          "originInfo": {
+            "issued": "1964-10-21"
+          }
+        },
+        "accessInfo": {
+          "accessAllowedFrom": "EVERYWHERE",
+          "viewability": "ALL",
+          "isDigital": true,
+          "isPublicDomain": true
+        },
+        "_links": {
+          "self": {
+            "href": "http://172.17.0.18:8765/catalog/items/02c280f38d34d2f2deaad22702cb887d"
+          },
+          "mods": {
+            "href": "http://172.17.0.18:8765/catalog/metadata/02c280f38d34d2f2deaad22702cb887d/mods"
+          },
+          "presentation": {
+            "href": "http://172.17.0.18:8765/catalog/iiif/02c280f38d34d2f2deaad22702cb887d/manifest"
+          }
+        },
+        "id": "02c280f38d34d2f2deaad22702cb887d"
+      }
+    ],
+    "aggregations": [
+      {
+        "name": "avis",
+        "facetValues": [
+          {
+            "key": "Rana Blad",
+            "count": 18745
+          }
+        ]
+      }
+    ]
+  }
+}
