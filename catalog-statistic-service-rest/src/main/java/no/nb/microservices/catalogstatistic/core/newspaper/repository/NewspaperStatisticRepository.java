@@ -5,6 +5,8 @@ import no.nb.microservices.catalogsearch.rest.model.search.SearchResource;
 import no.nb.microservices.catalogstatistic.core.newspaper.model.Newspaper;
 import no.nb.microservices.catalogstatistic.core.newspaper.model.NewspaperStatisticAggregated;
 import no.nb.microservices.catalogstatistic.core.search.repository.ISearchRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Repository;
@@ -25,6 +27,7 @@ public class NewspaperStatisticRepository implements INewspaperStatisticReposito
 
     public static final String AVIS_AGGREGATION = "series";
     private final ISearchRepository searchRepository;
+    private static final Logger LOG = LoggerFactory.getLogger(NewspaperStatisticRepository.class);
 
     @Autowired
     public NewspaperStatisticRepository(ISearchRepository searchRepository) {
@@ -65,25 +68,36 @@ public class NewspaperStatisticRepository implements INewspaperStatisticReposito
         SearchResource searchResource = searchRepository.search("title:\"" + title + "\"", "", 0, 1, Arrays.asList(sort), AVIS_AGGREGATION);
         if(searchResource != null) {
             for (JsonNode jsonNode : searchResource.getEmbedded().getItems()) {
-                if(jsonNode.has("metadata")) {
-                    JsonNode metadataNode = jsonNode.get("metadata");
-                    if(metadataNode.has("originInfo")) {
-                        JsonNode originInfoNode = metadataNode.get("originInfo");
-                        if(originInfoNode.has("issued")) {
-                            editionDate = originInfoNode.get("issued").asText();
-                        }
-                    }
-                }
-
+                editionDate = getDateIssued(jsonNode);
                 if(!editionDate.isEmpty()) {
-                    try {
-                        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(editionDate);
-                        editionDate = new SimpleDateFormat("dd.MM.yyyy").format(date);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                    editionDate = formatEditionDate(title, editionDate);
                 }
             }
+        }
+        return editionDate;
+    }
+
+    private String getDateIssued(JsonNode jsonNode) {
+        String editionDate = "";
+        if(jsonNode.has("metadata")) {
+            JsonNode metadataNode = jsonNode.get("metadata");
+            if(metadataNode.has("originInfo")) {
+                JsonNode originInfoNode = metadataNode.get("originInfo");
+                if(originInfoNode.has("issued")) {
+                    editionDate = originInfoNode.get("issued").asText();
+                }
+            }
+        }
+        return editionDate;
+    }
+
+    private String formatEditionDate(String title, String editionDate) {
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(editionDate);
+            editionDate = new SimpleDateFormat("dd.MM.yyyy").format(date);
+        } catch (ParseException e) {
+            LOG.info("Cant get edition date for " + title + ": " + e.getMessage());
+            LOG.debug("Cant get edition date for " + title + ": " + e.getMessage(), e);
         }
         return editionDate;
     }
