@@ -1,7 +1,7 @@
 {
   "_links": {
     "self": {
-      "href": "http://172.17.0.18:8765/catalog/search?q=title:\"Rana Blad\"&sort=date,desc"
+      "href": "http://172.17.0.18:8765/v1/catalog/search?q=title:\"Rana Blad\"&sort=date,desc"
     }
   },
   "page": {
@@ -37,13 +37,13 @@
         },
         "_links": {
           "self": {
-            "href": "http://172.17.0.18:8765/catalog/items/0ed717f04274e5f1802d549873ec6dca"
+            "href": "http://172.17.0.18:8765/v1/catalog/items/0ed717f04274e5f1802d549873ec6dca"
           },
           "mods": {
-            "href": "http://172.17.0.18:8765/catalog/metadata/850ca6311a67fb0c21c6d9c27e8eff13/mods"
+            "href": "http://172.17.0.18:8765/v1/catalog/metadata/850ca6311a67fb0c21c6d9c27e8eff13/mods"
           },
           "presentation": {
-            "href": "http://172.17.0.18:8765/catalog/iiif/850ca6311a67fb0c21c6d9c27e8eff13/manifest"
+            "href": "http://172.17.0.18:8765/v1/catalog/iiif/850ca6311a67fb0c21c6d9c27e8eff13/manifest"
           }
         },
         "id": "850ca6311a67fb0c21c6d9c27e8eff13"

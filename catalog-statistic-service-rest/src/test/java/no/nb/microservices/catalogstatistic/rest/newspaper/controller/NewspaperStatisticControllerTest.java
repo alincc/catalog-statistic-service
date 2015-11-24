@@ -35,7 +35,7 @@ public class NewspaperStatisticControllerTest {
 
     @Before
     public void init() {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/statistic/newspaper");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/statistic/newspaper");
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
 
         RequestContextHolder.setRequestAttributes(attributes);
