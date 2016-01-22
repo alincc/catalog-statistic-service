@@ -66,7 +66,7 @@ public class NewspaperControllerIT {
 
             @Override
             public MockResponse dispatch(RecordedRequest recordedRequest) throws InterruptedException {
-                if (recordedRequest.getPath().startsWith("/v1/catalog/search")) {
+                if (recordedRequest.getPath().startsWith("/catalog/v1/search")) {
                     return new MockResponse().setResponseCode(200).setHeader("Content-Type", "application/hal+json; charset=utf-8").setBody(searchResponse);
                 }
                 return new MockResponse().setResponseCode(404);
@@ -82,7 +82,7 @@ public class NewspaperControllerIT {
     @Test
     public void getNewspaperStatistic() {
         ResponseEntity<StatisticResource> entity = new TestRestTemplate().getForEntity(
-                "http://localhost:" + this.port + "/v1/statistic/newspaper", StatisticResource.class);
+                "http://localhost:" + this.port + "/catalog/v1/statistic/newspaper", StatisticResource.class);
 
         StatisticResource statisticResource = entity.getBody();
         assertEquals(HttpStatus.OK, entity.getStatusCode());

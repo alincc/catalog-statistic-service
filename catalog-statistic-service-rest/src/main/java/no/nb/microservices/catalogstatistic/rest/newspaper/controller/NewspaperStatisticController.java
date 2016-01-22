@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by alfredw on 9/21/15.
  */
 @RestController
-@RequestMapping(value = "/v1/statistic/newspaper")
+@RequestMapping(value = "/catalog/v1/statistic/newspaper")
 public class NewspaperStatisticController {
 
     private INewspaperStatisticService newspaperStatisticService;

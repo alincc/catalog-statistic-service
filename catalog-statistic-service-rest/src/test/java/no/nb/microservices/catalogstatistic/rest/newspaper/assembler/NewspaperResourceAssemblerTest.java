@@ -18,7 +18,7 @@ public class NewspaperResourceAssemblerTest {
 
     @Before
     public void init() {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/statistic/newspaper");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/catalog/v1/statistic/newspaper");
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
 
         RequestContextHolder.setRequestAttributes(attributes);
