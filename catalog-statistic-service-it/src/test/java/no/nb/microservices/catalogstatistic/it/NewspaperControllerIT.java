@@ -31,8 +31,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by alfredw on 9/16/15.
@@ -86,7 +88,7 @@ public class NewspaperControllerIT {
 
         StatisticResource statisticResource = entity.getBody();
         assertEquals(HttpStatus.OK, entity.getStatusCode());
-        assertNotNull(statisticResource.getEmbedded().getItems());
+        assertThat(statisticResource.getEmbedded().getItems().get(0).getFirstScannedEditionDate(), is("21.10.1964"));
     }
 
     @After

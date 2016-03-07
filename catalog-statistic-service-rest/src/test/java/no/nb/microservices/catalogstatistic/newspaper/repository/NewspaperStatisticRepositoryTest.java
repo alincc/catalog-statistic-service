@@ -1,12 +1,12 @@
 package no.nb.microservices.catalogstatistic.newspaper.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nb.microservices.catalogsearch.rest.model.search.SearchResource;
+import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
+import no.nb.microservices.catalogstatistic.core.item.repository.ItemRepository;
 import no.nb.microservices.catalogstatistic.core.newspaper.model.Newspaper;
 import no.nb.microservices.catalogstatistic.core.newspaper.model.NewspaperStatisticAggregated;
 import no.nb.microservices.catalogstatistic.core.newspaper.repository.INewspaperStatisticRepository;
 import no.nb.microservices.catalogstatistic.core.newspaper.repository.NewspaperStatisticRepository;
-import no.nb.microservices.catalogstatistic.core.search.repository.ISearchRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -30,17 +30,17 @@ import static org.mockito.Mockito.when;
 public class NewspaperStatisticRepositoryTest {
 
     @Mock
-    private ISearchRepository searchRepository;
+    private ItemRepository searchRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     public void getStatistics() throws IOException {
         INewspaperStatisticRepository repository = new NewspaperStatisticRepository(searchRepository);
-        SearchResource aggregationResponse = getSearchResourceResponseEntity("no/nb/microservices/catalogstatistic/core/newspaper/repository/AvisAggregationSearchResponse.json");
-        SearchResource firstEditionResponse = getSearchResourceResponseEntity("no/nb/microservices/catalogstatistic/core/newspaper/repository/RanaBladFirstEditionSearchResponse.json");
-        SearchResource lastEditionResponse = getSearchResourceResponseEntity("no/nb/microservices/catalogstatistic/core/newspaper/repository/RanaBladLastEditionSearchResponse.json");
-        when(searchRepository.search(anyString(), anyString(), anyInt(), anyInt(), anyList(), anyString())).thenReturn(aggregationResponse, firstEditionResponse, lastEditionResponse);
+        ItemSearchResource aggregationResponse = getSearchResourceResponseEntity("no/nb/microservices/catalogstatistic/core/newspaper/repository/AvisAggregationSearchResponse.json");
+        ItemSearchResource firstEditionResponse = getSearchResourceResponseEntity("no/nb/microservices/catalogstatistic/core/newspaper/repository/RanaBladFirstEditionSearchResponse.json");
+        ItemSearchResource lastEditionResponse = getSearchResourceResponseEntity("no/nb/microservices/catalogstatistic/core/newspaper/repository/RanaBladLastEditionSearchResponse.json");
+        when(searchRepository.search(anyString(), anyString(), anyList(), anyString(), anyInt(), anyInt(), anyList(), anyString())).thenReturn(aggregationResponse, firstEditionResponse, lastEditionResponse);
 
         NewspaperStatisticAggregated newspaperStatisticAggregated = repository.getStatistics();
 
@@ -53,9 +53,9 @@ public class NewspaperStatisticRepositoryTest {
         assertEquals("18.09.2015", newspaper.getLastScannedEditionDate());
     }
 
-    private SearchResource getSearchResourceResponseEntity(String pathToFile) throws IOException {
+    private ItemSearchResource getSearchResourceResponseEntity(String pathToFile) throws IOException {
         String file = getClass().getClassLoader().getResource(pathToFile).getFile();
         String jsonString = new String(Files.readAllBytes(Paths.get(file)));
-        return objectMapper.readValue(jsonString, SearchResource.class);
+        return objectMapper.readValue(jsonString, ItemSearchResource.class);
     }
 }

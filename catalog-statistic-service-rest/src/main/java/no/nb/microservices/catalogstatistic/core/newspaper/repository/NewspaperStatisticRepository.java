@@ -1,10 +1,11 @@
 package no.nb.microservices.catalogstatistic.core.newspaper.repository;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import no.nb.microservices.catalogsearch.rest.model.search.SearchResource;
+import no.nb.microservices.catalogitem.rest.model.ItemResource;
+import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
+import no.nb.microservices.catalogstatistic.core.item.repository.ItemRepository;
 import no.nb.microservices.catalogstatistic.core.newspaper.model.Newspaper;
 import no.nb.microservices.catalogstatistic.core.newspaper.model.NewspaperStatisticAggregated;
-import no.nb.microservices.catalogstatistic.core.search.repository.ISearchRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Created by alfredw on 9/16/15.
@@ -26,11 +23,11 @@ import java.util.stream.Collectors;
 public class NewspaperStatisticRepository implements INewspaperStatisticRepository {
 
     public static final String AVIS_AGGREGATION = "series";
-    private final ISearchRepository searchRepository;
+    private final ItemRepository searchRepository;
     private static final Logger LOG = LoggerFactory.getLogger(NewspaperStatisticRepository.class);
 
     @Autowired
-    public NewspaperStatisticRepository(ISearchRepository searchRepository) {
+    public NewspaperStatisticRepository(ItemRepository searchRepository) {
         this.searchRepository = searchRepository;
     }
 
@@ -51,54 +48,50 @@ public class NewspaperStatisticRepository implements INewspaperStatisticReposito
 
     private List<Newspaper> getBinders() {
         List<Newspaper> newspapers = new ArrayList<>();
-        SearchResource searchResource = searchRepository.search("-dsadsasa&mediatype=Aviser", "", 0, 1, new ArrayList<>(), AVIS_AGGREGATION);
+        List<String> filters = new ArrayList<>();
+        filters.add("mediatype:Aviser");
+
+        ItemSearchResource searchResource = searchRepository.search("-dsadsasa", "",filters, null ,0, 1, new ArrayList<>(), AVIS_AGGREGATION);
 
         if(searchResource != null) {
-            searchResource.getEmbedded().getAggregations().stream()
-                    .filter(aggregationResource -> AVIS_AGGREGATION.equals(aggregationResource.getName()))
-                    .forEach(aggregationResource -> newspapers.addAll(aggregationResource.getFacetValues().stream()
-                            .map(facetValueResource -> new Newspaper(facetValueResource.getKey(), facetValueResource.getCount()))
-                            .collect(Collectors.toList())));
+            JsonNode aggregations = searchResource.getEmbedded().getAggregations();
+            Iterator<JsonNode> iterator = aggregations.iterator();
+            while (iterator.hasNext()) {
+                JsonNode node = iterator.next();
+                if (node.get("name").asText().equals("series")) {
+                    Iterator<JsonNode> facetValues = node.get("facetValues").iterator();
+                    while (facetValues.hasNext()) {
+                        JsonNode facetvalue = facetValues.next();
+                        newspapers.add(new Newspaper(facetvalue.get("key").asText(),facetvalue.get("count").asInt()));
+                    }
+                }
+            }
         }
         return newspapers;
     }
 
     private String getEditionDate(String title, String sort) {
         String editionDate = "";
-        SearchResource searchResource = searchRepository.search("title:\"" + title + "\"", "", 0, 1, Arrays.asList(sort), AVIS_AGGREGATION);
+        ItemSearchResource searchResource = searchRepository.search("title:\"" + title + "\"", "", null, "metadata", 0, 1, Arrays.asList(sort), AVIS_AGGREGATION);
         if(searchResource != null) {
-            for (JsonNode jsonNode : searchResource.getEmbedded().getItems()) {
-                editionDate = getDateIssued(jsonNode);
-                if(!editionDate.isEmpty()) {
-                    editionDate = formatEditionDate(title, editionDate);
+            for (ItemResource itemResource : searchResource.getEmbedded().getItems()) {
+                if(itemResource.getMetadata().getOriginInfo().getIssued() != null) {
+                    editionDate = formatEditionDate(itemResource.getMetadata().getOriginInfo().getIssued());
                 }
             }
         }
         return editionDate;
     }
 
-    private String getDateIssued(JsonNode jsonNode) {
-        String editionDate = "";
-        if(jsonNode.has("metadata")) {
-            JsonNode metadataNode = jsonNode.get("metadata");
-            if(metadataNode.has("originInfo")) {
-                JsonNode originInfoNode = metadataNode.get("originInfo");
-                if(originInfoNode.has("issued")) {
-                    editionDate = originInfoNode.get("issued").asText();
-                }
-            }
-        }
-        return editionDate;
-    }
-
-    private String formatEditionDate(String title, String editionDate) {
+    private String formatEditionDate(String editionDate) {
         try {
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(editionDate);
             editionDate = new SimpleDateFormat("dd.MM.yyyy").format(date);
         } catch (ParseException e) {
-            LOG.info("Cant get edition date for " + title + ": " + e.getMessage());
-            LOG.debug("Cant get edition date for " + title + ": " + e.getMessage(), e);
+            LOG.error("Error parsing date: " + editionDate + ": " + e.getMessage());
+            LOG.debug("Error parsing date: " + editionDate + ": " + e.getMessage(), e);
         }
         return editionDate;
     }
+
 }

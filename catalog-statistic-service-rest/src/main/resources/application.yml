@@ -4,4 +4,4 @@ info:
     description: Statistics
 
 server:
-  port: 0
+  port: 8003

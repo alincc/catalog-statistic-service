@@ -89,9 +89,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>no.nb.microservices.catalogsearch</groupId>
-            <artifactId>catalog-search-service-model</artifactId>
-            <version>-72</version>
+            <groupId>no.nb.microservices.catalogitem</groupId>
+            <artifactId>catalog-item-service-model</artifactId>
+            <version>0.0.1-212</version>
         </dependency>
 
         <!-- Testing -->

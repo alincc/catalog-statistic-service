@@ -51,7 +51,7 @@
     ],
     "aggregations": [
       {
-        "name": "avis",
+        "name": "series",
         "facetValues": [
           {
             "key": "Rana Blad",

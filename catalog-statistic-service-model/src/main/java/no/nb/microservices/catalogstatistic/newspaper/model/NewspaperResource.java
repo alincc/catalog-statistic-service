@@ -1,5 +1,7 @@
 package no.nb.microservices.catalogstatistic.newspaper.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.hateoas.ResourceSupport;
 
 /**
@@ -12,7 +14,11 @@ public class NewspaperResource extends ResourceSupport {
     private final String lastScannedEditionDate;
     private final long numberOfEditions;
 
-    public NewspaperResource(String title, String firstScannedEditionDate, String lastScannedEditionDate, long numberOfEditions) {
+    @JsonCreator
+    public NewspaperResource(@JsonProperty("title") String title,
+                             @JsonProperty("firstScannedEditionDate") String firstScannedEditionDate,
+                             @JsonProperty("lastScannedEditionDate") String lastScannedEditionDate,
+                             @JsonProperty("numberOfEditions") long numberOfEditions) {
         this.title = title;
         this.firstScannedEditionDate = firstScannedEditionDate;
         this.lastScannedEditionDate = lastScannedEditionDate;
