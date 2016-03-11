@@ -90,6 +90,7 @@ Desktop.ini
 /deploy/**
 /catalog-typeahead-service-model/target
 /catalog-typeahead-service-rest/target
+*/target
 
 ######################
 # Logs
