@@ -1,7 +1,7 @@
 {
   "_links": {
     "self": {
-      "href": "http://172.17.0.18:8765/catalog/v1/items?q=title:\"Rana Blad\"&mediatype=avis&aggs=series"
+      "href": "http://catalog-item-service/catalog/v1/items?q=-dsadsasa&fields=&filter=mediatype,Aviser&page=0&size=1&aggs=series"
     }
   },
   "page": {
