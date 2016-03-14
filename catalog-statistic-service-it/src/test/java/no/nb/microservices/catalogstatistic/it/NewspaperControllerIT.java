@@ -68,7 +68,7 @@ public class NewspaperControllerIT {
 
             @Override
             public MockResponse dispatch(RecordedRequest recordedRequest) throws InterruptedException {
-                if (recordedRequest.getPath().startsWith("/catalog/v1/search")) {
+                if (recordedRequest.getPath().startsWith("/catalog/v1/items")) {
                     return new MockResponse().setResponseCode(200).setHeader("Content-Type", "application/hal+json; charset=utf-8").setBody(searchResponse);
                 }
                 return new MockResponse().setResponseCode(404);

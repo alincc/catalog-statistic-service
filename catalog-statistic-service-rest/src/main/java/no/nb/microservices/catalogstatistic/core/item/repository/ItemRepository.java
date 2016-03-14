@@ -14,7 +14,7 @@ import java.util.List;
 @FeignClient("catalog-item-service")
 public interface ItemRepository {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/catalog/v1/search")
+    @RequestMapping(method = RequestMethod.GET, value = "/catalog/v1/items")
     ItemSearchResource search(@RequestParam("q") String q,
                               @RequestParam("fields") String fields,
                               @RequestParam("filter") List<String> filter,
