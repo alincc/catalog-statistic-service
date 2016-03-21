@@ -11,6 +11,8 @@ import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType;
 
+import no.nb.metrics.annotation.EnableMetrics;
+
 @SpringBootApplication
 @EnableConfigurationProperties
 @EnableDiscoveryClient
@@ -18,6 +20,7 @@ import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType
 @EnableCircuitBreaker
 @EnableOAuth2Resource
 @RefreshScope
+@EnableMetrics
 @EnableHypermediaSupport(type= {HypermediaType.HAL})
 public class Application {
 
